@@ -3,7 +3,7 @@ var debug = require('debug');
 var axios = require('axios');
 
 
-class Honeywell extends alarms.AlarmBase {
+class DSC extends alarms.AlarmBase {
     constructor (log, config) {
         super(log);
         this.key = config.key;
@@ -13,6 +13,12 @@ class Honeywell extends alarms.AlarmBase {
         this.setPIN = config.setPIN;
         this.panicKey = config.panicKey;
         this.chimeKey = config.chimeKey;
+        let rePlatformType = new RegExp('dsc','i');
+        this.isDSC = true;
+        this.DSCAway = config.DSCAway;
+        this.DSCStay = config.DSCStay;
+        this.DSCReset = config.DSCReset;
+        this.DSCExit = config.DSCExit;
         this.axiosHeaderConfig = {headers:{
             'Authorization':this.key,
             'Content-Type':'application/json',
@@ -88,10 +94,10 @@ class Honeywell extends alarms.AlarmBase {
         var codeToSend = null;
         switch (state) {
         case 0: //stay|home
-            codeToSend = this.setPIN+'3';
+            codeToSend = this.DSCStay;
             break;
         case 1 :
-            codeToSend = this.setPIN+'2';
+            codeToSend = this.DSCAway;
             break;
         case 2:
             codeToSend = this.setPIN+'7';
@@ -112,6 +118,11 @@ class Honeywell extends alarms.AlarmBase {
         tempObj.keys=codeToSend;
         var body = JSON.stringify(tempObj);
         try {
+            // ignore disarm requests if panel is already disarmed and it's a DSC panel (otherwise it rearms itself)
+            if((state == 3) && (this.state == 3)) {
+                debug('disarm request for DSC panel but system is already disarmed, ignoring');
+                return true;
+            }
             var response = await axios.post(this.setURL,body,this.axiosHeaderConfig);
             if(response.status==200 || response.status==204) //should be a 204
                 return true;
@@ -125,4 +136,4 @@ class Honeywell extends alarms.AlarmBase {
     }
 }
 
-module.exports.Honeywell = Honeywell;
+module.exports.DSC = DSC;

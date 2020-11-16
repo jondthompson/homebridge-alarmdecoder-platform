@@ -19,18 +19,28 @@ class AlarmdecoderPlatform {
         this.alarmSystem = null; // set of the right class during initPlatform
         this.createSwitch = config.useSwitches;
         this.zoneAccessories = [];  // holds accessories pulled from cache before attachment
-        config.DSCorHoneywell ? this.platformType = config.DSCorHoneywell : this.platformType = config.platformType;  // back compatibility
+        config.DSCorHoneywell ? this.platformType = config.DSCorHoneywell.toLowerCase() : this.platformType = config.platformType.toLowerCase();
+        config.platformType = this.platformType;  // back compatibility
         
         // setting alarm class type
-        let rePlatformType = new RegExp('dsc|honeywell','i');
-        if(rePlatformType.exec(this.platformType)) 
-            this.alarmSystem = new alarms.HoneywellDSC(log, config);
-        rePlatformType = new RegExp('interlogix|ge|caddx','i');
-        if(rePlatformType.exec(this.platformType)) 
-            this.alarmSystem = new alarms.Interlogix(log, config);
-        if(!this.alarmSystem) {
-            this.log('no system specified, assuming Honeywell, please add platformType variable to your config.json');
-            this.alarmSystem = new alarms.HoneywellDSC(log, config);
+
+        switch(this.platformType)
+        {
+            case 'honeywell':
+                this.alarmSystem = new alarms.Honeywell(log, config);
+            break;
+                case 'dsc':
+                this.alarmSystem = new alarms.DSC(log, config);
+                break;
+            case 'interlogix':
+            case 'ge':
+            case 'caddx': 
+                this.alarmSystem = new alarms.Interlogix(log, config);
+                break;
+            default:
+                this.log('no system (or wrong system) specified, assuming Honeywell, please add platformType variable to your config.json');
+                this.alarmSystem = new alarms.Honeywell(log, config);
+                break;
         }
         debug('platform class in use: '+this.alarmSystem.constructor.name);
         
