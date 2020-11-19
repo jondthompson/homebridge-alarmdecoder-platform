@@ -267,7 +267,7 @@ class AlarmdecoderPlatform {
             debug("this.alarmSystem.state: "+this.alarmSystem.state);
             switch (this.alarmSystem.state) {
             case 0:
-                switchToSet='home';
+                switchToSet='stay';
                 break;
             case 1:
                 switchToSet='away';
@@ -281,8 +281,9 @@ class AlarmdecoderPlatform {
             default:
                 break;
             }
+            debug("switchAccessories: "+this.switchAccessories);
             for(let toggle in this.switchAccessories) {
-                debug(this.switchAccessories[toggle].displayName);
+                debug(this.switchAccessories[toggle]);
                 if (this.switchAccessories[toggle].displayName == switchToSet)
                     this.switchAccessories[toggle].getService(Service.Switch)
                         .updateCharacteristic(Characteristic.On,true);
