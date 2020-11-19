@@ -282,6 +282,7 @@ class AlarmdecoderPlatform {
                 break;
             }
             for(let toggle in this.switchAccessories) 
+                debug(this.switchAccessories[toggle].displayName);
                 if (this.switchAccessories[toggle].displayName == switchToSet)
                     this.switchAccessories[toggle].getService(Service.Switch)
                         .updateCharacteristic(Characteristic.On,true);
