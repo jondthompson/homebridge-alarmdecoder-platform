@@ -264,6 +264,7 @@ class AlarmdecoderPlatform {
 
             //update switches
             var switchToSet=null;
+            debug("this.alarmState.state: "+this.alarmState.state);
             switch (this.alarmSystem.state) {
             case 0:
                 switchToSet='stay';
