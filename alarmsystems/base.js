@@ -12,7 +12,6 @@ class AlarmBase {
         this.state = null;
         this.log = log;
         this.alarmZones = []; //used to hold all AlarmDecoderZones, which reference a zone accessory
-        this.platformType =  platformType;
     }
 
     async getAlarmState() {
