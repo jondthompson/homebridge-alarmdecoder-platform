@@ -267,7 +267,7 @@ class AlarmdecoderPlatform {
             debug("this.alarmSystem.state: "+this.alarmSystem.state);
             switch (this.alarmSystem.state) {
             case 0:
-                switchToSet='stay';
+                switchToSet='home';
                 break;
             case 1:
                 switchToSet='away';
