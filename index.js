@@ -281,13 +281,13 @@ class AlarmdecoderPlatform {
             default:
                 break;
             }
-            debug("switchAccessories: "+this.switchAccessories);
+            //Switch Accessories are panic and ''
             for(let toggle in this.switchAccessories) {
-                debug(this.switchAccessories[toggle]);
                 if (this.switchAccessories[toggle].displayName == switchToSet)
                     this.switchAccessories[toggle].getService(Service.Switch)
                         .updateCharacteristic(Characteristic.On,true);
                 else
+                    // this is the case for all states but panic
                     this.switchAccessories[toggle].getService(Service.Switch)
                         .updateCharacteristic(Characteristic.On,false);
             }
