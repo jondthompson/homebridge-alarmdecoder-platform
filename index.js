@@ -281,7 +281,7 @@ class AlarmdecoderPlatform {
             default:
                 break;
             }
-            for(let toggle in this.switchAccessories) 
+            for(let toggle in this.switchAccessories) {
                 debug(this.switchAccessories[toggle].displayName);
                 if (this.switchAccessories[toggle].displayName == switchToSet)
                     this.switchAccessories[toggle].getService(Service.Switch)
@@ -289,7 +289,7 @@ class AlarmdecoderPlatform {
                 else
                     this.switchAccessories[toggle].getService(Service.Switch)
                         .updateCharacteristic(Characteristic.On,false);
-            
+            }
             // update zones
             for(let alarmZone in this.alarmSystem.alarmZones) {
                 alarmZone=this.alarmSystem.alarmZones[alarmZone];
