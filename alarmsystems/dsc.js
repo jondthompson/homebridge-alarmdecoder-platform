@@ -14,7 +14,6 @@ class DSC extends alarms.AlarmBase {
         this.panicKey = config.panicKey;
         this.chimeKey = config.chimeKey;
         let rePlatformType = new RegExp('dsc','i');
-        this.isDSC = true;
         this.DSCAway = config.DSCAway;
         this.DSCStay = config.DSCStay;
         this.DSCReset = config.DSCReset;
@@ -28,7 +27,7 @@ class DSC extends alarms.AlarmBase {
 
     async initZones() {
         try {
-            this.log('init zones');
+            this.log('dsc-initZones');
             var response = await axios.get(this.zoneURL,this.axiosHeaderConfig);
             if (response.status!=200 || !response.data)
                 throw 'initZones failed or generated null data with response status of '+response.status;
@@ -45,6 +44,7 @@ class DSC extends alarms.AlarmBase {
     }
 
     async getAlarmState() {
+        this.log('dsc-getAlarmState')
         try {
             var response = await axios.get(this.stateURL,this.axiosHeaderConfig);
             if ((response.status==200 || response.status==204) && response.data) {
@@ -91,6 +91,7 @@ class DSC extends alarms.AlarmBase {
 
     /* 0 = stay, 1 = away, 2 = night, 3 = disarmed, 4 = alarm */
     async setAlarmState(state) {
+        this.log('DSC-setAlarmState')
         var codeToSend = null;
         switch (state) {
         case 0: //stay|home

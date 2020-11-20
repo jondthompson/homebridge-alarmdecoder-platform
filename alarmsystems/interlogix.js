@@ -15,6 +15,7 @@ class Interlogix extends alarms.AlarmBase {
     }
 
     async getAlarmState() {
+        debug('interlogix-getAlarmState');
         var response = null;
         try {
             // query zone status
@@ -61,6 +62,7 @@ class Interlogix extends alarms.AlarmBase {
 
     /* 0 = stay, 1 = away, 2 = night, 3 = disarmed, 4 = alarm */
     async setAlarmState(state) {
+        debug('interlogix-setAlarmState')
         this.state = state; //clears linter error
         try {
             switch(state) {
@@ -93,6 +95,7 @@ class Interlogix extends alarms.AlarmBase {
     }
 
     async initZones() {
+        debug('interlogix-initZones')
         try {
             var response = await axios.get(this.zoneURL,this.axiosConfig);
             if ((response.status==200 || response.status==204) && response.data && response.data.zones.length > 0) {
