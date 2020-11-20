@@ -151,7 +151,6 @@ class AlarmdecoderPlatform {
     }
 
     async initPlatform() {
-
         this.log('initalizing platform');
 
         // if security system wasn't pulled from cache, add
@@ -247,6 +246,7 @@ class AlarmdecoderPlatform {
 
     // private method used by registered functions to get state from Alarm
     async _getStateFromAlarm(report=false) {
+        debug("_getStateFromAlarm with report-"+report);
         try {
             await this.alarmSystem.getAlarmState();
         }
@@ -329,7 +329,7 @@ class AlarmdecoderPlatform {
     }
 
     async getZoneState(displayName, callback) {
-        debug('getting state for '+displayName);
+        debug('getZoneState for '+displayName);
         await this._getStateFromAlarm(false); // avoid out-of-sync errors by getting the whole state tree but don't push, just wait on the callback to do it
         var found = false;
         for(let alarmZone in this.alarmSystem.alarmZones) {
@@ -354,7 +354,7 @@ class AlarmdecoderPlatform {
     }
 
     async getAlarmState(callback) {
-        debug('getting state for '+this.name);
+        debug('getAlarmState for '+this.name);
         if(await this._getStateFromAlarm(false) && this.alarmSystem.state) 
             callback(null,this.alarmSystem.state);
         else
@@ -363,7 +363,7 @@ class AlarmdecoderPlatform {
 
     async getSwitchState(switchType, callback) {
         /* 0 = stay, 1 = away, 2 = night, 3 = disarmed, 4 = alarm */
-        debug('getting state for switch '+ switchType);
+        debug('getSwitchState '+ switchType);
         await this._getStateFromAlarm(false);
         if(switchType == 'panic' && this.alarmSystem.state==4)
             callback(null,true);
@@ -378,8 +378,7 @@ class AlarmdecoderPlatform {
     }
 
     async setSwitchState(state, switchType, callback) {
-        debug('setting switch '+switchType+' to '+state);
-        debug('possible States: '+ Characteristic.SecuritySystemTargetState);
+        debug('setSwitchState to '+state );
         if (!state) //switch is turnning off so disarm
             await this.setAlarmtoState(Characteristic.SecuritySystemTargetState.DISARM, callback);
         else {
@@ -399,7 +398,7 @@ class AlarmdecoderPlatform {
     }
 
     async setAlarmtoState(state, callback) {
-        debug('setting alarm state to '+state);
+        debug('setAlarmtoState for '+state);
         if(await this.alarmSystem.setAlarmState(state))
             callback(null,state);
         else

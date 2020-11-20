@@ -6,6 +6,7 @@ var axios = require('axios');
 class Honeywell extends alarms.AlarmBase {
     constructor (log, config) {
         super(log);
+        this.platform = 'honeywell';
         this.key = config.key;
         this.stateURL = config.stateURL;
         this.zoneURL = config.zoneURL;
@@ -21,8 +22,8 @@ class Honeywell extends alarms.AlarmBase {
     }
 
     async initZones() {
+        debug('HW-initZones');
         try {
-            this.log('init zones');
             var response = await axios.get(this.zoneURL,this.axiosHeaderConfig);
             if (response.status!=200 || !response.data)
                 throw 'initZones failed or generated null data with response status of '+response.status;
@@ -39,6 +40,7 @@ class Honeywell extends alarms.AlarmBase {
     }
 
     async getAlarmState() {
+        debug('HW-getAlarmState');
         try {
             var response = await axios.get(this.stateURL,this.axiosHeaderConfig);
             if ((response.status==200 || response.status==204) && response.data) {
@@ -75,7 +77,7 @@ class Honeywell extends alarms.AlarmBase {
                 return true;
             }
             else 
-                throw 'getAlarmState failed with response status of '+response.status;
+                throw platform + ': getAlarmState failed with response status of '+response.status;
         }
         catch (e) {
             this.log(e);
@@ -85,6 +87,7 @@ class Honeywell extends alarms.AlarmBase {
 
     /* 0 = stay, 1 = away, 2 = night, 3 = disarmed, 4 = alarm */
     async setAlarmState(state) {
+        debug("HW-setAlarmState");
         var codeToSend = null;
         switch (state) {
         case 0: //stay|home
@@ -116,7 +119,7 @@ class Honeywell extends alarms.AlarmBase {
             if(response.status==200 || response.status==204) //should be a 204
                 return true;
             else
-                throw 'setAlarmState failed with response status of '+response.status;
+                throw platform + ': setAlarmState failed with response status of '+response.status;
         }
         catch (err) {
             this.log(err);
