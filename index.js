@@ -379,6 +379,7 @@ class AlarmdecoderPlatform {
 
     async setSwitchState(state, switchType, callback) {
         debug('setting switch '+switchType+' to '+state);
+        debug('possible States: '+ Characteristic.SecuritySystemTargetState);
         if (!state) //switch is turnning off so disarm
             await this.setAlarmtoState(Characteristic.SecuritySystemTargetState.DISARM, callback);
         else {
