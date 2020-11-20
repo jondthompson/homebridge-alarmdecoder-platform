@@ -1,5 +1,5 @@
 var alarms = require('./base.js');
-var debug = require('debug');
+var debug = require('debug')('alarmdecoder');
 var axios = require('axios');
 
 
