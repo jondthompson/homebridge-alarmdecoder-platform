@@ -283,6 +283,7 @@ class AlarmdecoderPlatform {
             }
             //Switch Accessories are panic and ''
             for(let toggle in this.switchAccessories) {
+                this.log(this.switchAccessories[toggle].displayName);
                 if (this.switchAccessories[toggle].displayName == switchToSet)
                     this.switchAccessories[toggle].getService(Service.Switch)
                         .updateCharacteristic(Characteristic.On,true);
